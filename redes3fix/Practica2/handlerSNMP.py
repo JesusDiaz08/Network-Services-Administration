@@ -1,7 +1,7 @@
 import time
 import rrdtool
 from getSNMP import consultaSNMP
-from path import *
+
 
 class HandlerSNMP:
 
@@ -11,7 +11,7 @@ class HandlerSNMP:
 
 
     def create(self):
-        ret = rrdtool.create(self.path_rrd,
+        ret = rrdtool.create(self.path_rrd + self.name_rrd,
                        "--start", 'N',
                        "--step", '60',
                        "DS:CPUload:GAUGE:600:U:U",
