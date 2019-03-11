@@ -21,20 +21,22 @@ class HandlerSNMP:
 
     def update(self, community, ip, OID = '1.3.6.1.2.1.25.3.3.1.2.196608' ):
         carga_CPU = 0
+        i = 0
 
-        while 1:
+        while i < 10:
             carga_CPU = int(consultaSNMP(community, ip, OID))
             valor = "N:" + str(carga_CPU)
             print(valor)
             ret = rrdtool.update(self.path_rrd + self.name_rrd, valor)
             rrdtool.dump(self.path_rrd + self.name_rrd, 'trend.xml')
             time.sleep(1)
+            i += 1
 
         if ret:
             print(rrdtool.error())
             time.sleep(300)
 
-    def create_image(self, path_png):
+    def create_image(self, path_png, threshold_lower, threshold_upper):
 
         ultima_lectura = int(rrdtool.last(self.path_rrd + self.name_rrd))
         tiempo_final = ultima_lectura
@@ -47,9 +49,9 @@ class HandlerSNMP:
                             "--title=Uso de CPU",
                             "--color", "ARROW#009900",
                             '--vertical-label', "Uso de CPU (%)",
-                            '--lower-limit', '0',
-                            '--upper-limit', '100',
-                            "DEF:carga=" + self.name_rrd + self.name_rrd + ":CPUload:AVERAGE",
+                            '--lower-limit', threshold_lower,
+                            '--upper-limit', threshold_upper,
+                            "DEF:carga=" + self.path_rrd + self.name_rrd + ":CPUload:AVERAGE",
                             "AREA:carga#00FF00:Carga CPU",
                             "LINE1:30",
                             "AREA:5#ff000022:stack",
