@@ -35,7 +35,7 @@ class ComboBoxWindow(Gtk.Window):
         self.LabelIP = Gtk.Label("Ip host: ")
         self.BoxIp.pack_start(self.LabelIP, False, False, 1);
         self.EntryIP = Gtk.Entry()
-        self.EntryIP.set_text("localhost")  # Set default text
+        self.EntryIP.set_text("10.100.71.230")  # Set default text
         self.EntryIP.set_max_length(50)
         self.BoxIp.pack_start(self.EntryIP, True, True, 0)
         self.EntryIP.show()
@@ -47,7 +47,7 @@ class ComboBoxWindow(Gtk.Window):
         self.LabelCom = Gtk.Label("Comunidad: ")
         self.BoxCom.pack_start(self.LabelCom, False, False, 1);
         self.EntryCom = Gtk.Entry()
-        self.EntryCom.set_text("comunidadSNMP")  # Set default text
+        self.EntryCom.set_text("variation/virtualtable")  # Set default text
         self.EntryCom.set_max_length(50)
         self.BoxCom.pack_start(self.EntryCom, True, True, 0)
         self.EntryCom.show()

@@ -59,6 +59,7 @@ class rrdBase():
                             "--start", str(self.beginTime),
                             #                   "--end","N",
                             defi,
+                            "CDEF:AVG=dev,2,*,+",
                             lines)
 
     def Dump(self):
