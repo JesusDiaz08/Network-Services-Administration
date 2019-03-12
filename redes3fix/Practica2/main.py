@@ -41,12 +41,12 @@ class GUI(tk.Frame):
 
         h1 = hs.HandlerSNMP(path_rrd, name_rrd)
 
-        #h1.create()
+        h1.create()
 
         commmnity = self.com_text.get()
         ip = self.ip_text.get()
-        self.umbrales = {"breakpoint": "50", "set": "20", "go": "10"}
-        #h1.update(commmnity, ip, OID = 'iso.3.6.1.2.1.25.3.3.1.2.196608')
+        self.umbrales = {"breakpoint": "70", "set": "20", "go": "10"}
+        h1.update(commmnity, ip, OID = 'iso.3.6.1.2.1.25.3.3.1.2.196608')
         h1.create_image(path_rrd,
                         self.umbrales["breakpoint"],
                         self.umbrales["set"],

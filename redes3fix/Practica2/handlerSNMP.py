@@ -20,7 +20,7 @@ class HandlerSNMP:
         if ret:
             print(rrdtool.error())
 
-    def update(self, community, ip, OID = '1.3.6.1.2.1.25.3.3.1.2.196608', total = 200 ):
+    def update(self, community, ip, OID = '1.3.6.1.2.1.25.3.3.1.2.196608', total = 300 ):
         carga_CPU = 0
         i = 0
         she_doesnt_love_you = 1
@@ -102,7 +102,11 @@ class HandlerSNMP:
                              "PRINT:cargaMAX:%6.2lf %S",
                              "GPRINT:cargaMIN:%6.2lf %SMIN",
                              "GPRINT:cargaSTDEV:%6.2lf %SSTDEV",
-                             "GPRINT:cargaLAST:%6.2lf %SLAST")
+                             "GPRINT:cargaLAST:%6.2lf %SLAST",
+                             "VDEF:m=carga,LSLSLOPE",
+                             "VDEF:b=carga,LSLINT",
+                             'CDEF:tendencia=carga,POP,m,COUNT,*,b,+',
+                             "LINE2:tendencia#FFBB00")
         print (ret)
         # print(ret.keys())
         # print(ret.items())
@@ -110,7 +114,8 @@ class HandlerSNMP:
         ultimo_valor = float(ret['print[0]'])
 
         if ultimo_valor > float(umbrales['breakpoint']):
-            send_alert_attached("Sobrepasa Umbral línea base", self.path_rrd)
+            nombre_asunto = "Equipo Champions - "
+            send_alert_attached(nombre_asunto + "Sobrepasa Umbral línea base", self.path_rrd)
 
 
 

@@ -6,10 +6,13 @@ COMMASPACE = ', '
 # Define params
 
 
-mailsender = "dummycuenta3@gmail.com"
-mailreceip = "dummycuenta3@gmail.com"
+#mailsender = "dummycuenta3@gmail.com"
+mailsender  = "pruebatanibet@gmail.com"
+#mailreceip = "dummycuenta3@gmail.com"
+mailreceip  = "pruebatanibet@gmail.com"
 mailserver = 'smtp.gmail.com: 587'
-password = 'Secreto123'
+#password = 'Secreto123'
+password = "contraredes3"
 
 def send_alert_attached(subject, pngpath):
     """ Will send e-mail, attaching png
