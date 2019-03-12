@@ -1,5 +1,6 @@
 import time
 import rrdtool
+from Notify import *
 from getSNMP import consultaSNMP
 
 
@@ -24,7 +25,7 @@ class HandlerSNMP:
         i = 0
         she_doesnt_love_you = 1
 
-        while she_doesnt_love_you:
+        while i < total:
             carga_CPU = int(consultaSNMP(community, ip, OID))
             valor = "N:" + str(carga_CPU)
             print(str(i) + "-> " + valor)
@@ -72,5 +73,45 @@ class HandlerSNMP:
                             "VDEF:b=carga,LSLINT",
                             'CDEF:tendencia=carga,POP,m,COUNT,*,b,+',
                             "LINE2:tendencia#FFBB00")
+
+    def deteccion(self, umbrales):
+
+        ultima_lectura = int(rrdtool.last(self.path_rrd + self.name_rrd))
+        tiempo_final = ultima_lectura
+        tiempo_inicial = tiempo_final - 3600
+
+        ret = rrdtool.graphv(self.path_rrd + "deteccion.png",
+                             "--start", str(tiempo_inicial),
+                             "--end", str(tiempo_final),
+                             "--title", "Carga de CPU",
+                             "--vertical-label=Uso de CPU (%)",
+                             '--lower-limit', '0',
+                             '--upper-limit', '100',
+                             "DEF:carga=" + self.path_rrd + self.name_rrd + ":CPUload:AVERAGE",
+                             "CDEF:umbral25=carga,25,LT,0,carga,IF",
+                             "VDEF:cargaMAX=carga,MAXIMUM",
+                             "VDEF:cargaMIN=carga,MINIMUM",
+                             "VDEF:cargaSTDEV=carga,STDEV",
+                             "VDEF:cargaLAST=carga,LAST",
+                             "AREA:carga#00FF00:Carga del CPU",
+                             "AREA:umbral25#FF9F00:Tráfico de carga mayor que 25",
+                             "HRULE:25#FF0000:Umbral 1 - 25%",
+                             "LINE2:" + umbrales['breakpoint'] + "#FF0000",
+                             "LINE2:" + umbrales['set'] + "#0D76FF",
+                             "LINE2:" + umbrales['go'] + "#00FF00",
+                             "PRINT:cargaMAX:%6.2lf %S",
+                             "GPRINT:cargaMIN:%6.2lf %SMIN",
+                             "GPRINT:cargaSTDEV:%6.2lf %SSTDEV",
+                             "GPRINT:cargaLAST:%6.2lf %SLAST")
+        print (ret)
+        # print(ret.keys())
+        # print(ret.items())
+
+        ultimo_valor = float(ret['print[0]'])
+
+        if ultimo_valor > float(umbrales['breakpoint']):
+            send_alert_attached("Sobrepasa Umbral línea base", self.path_rrd)
+
+
 
 
