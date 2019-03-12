@@ -10,11 +10,11 @@ class HandlerSNMP:
         self.name_rrd = name_rrd
 
 
-    def create(self):
+    def create(self, type):
         ret = rrdtool.create(self.path_rrd + self.name_rrd,
                        "--start", 'N',
                        "--step", '60',
-                       "DS:CPUload:GAUGE:600:U:U",
+                       "DS:"+ type +":GAUGE:600:U:U",
                        "RRA:AVERAGE:0.5:1:24")
         if ret:
             print(rrdtool.error())
@@ -24,7 +24,7 @@ class HandlerSNMP:
         i = 0
         she_doesnt_love_you = 1
 
-        while she_doesnt_love_you:
+        while i < total:
             carga_CPU = int(consultaSNMP(community, ip, OID))
             valor = "N:" + str(carga_CPU)
             print(str(i) + "-> " + valor)
@@ -37,7 +37,7 @@ class HandlerSNMP:
             print(rrdtool.error())
             time.sleep(300)
 
-    def create_image(self, path_png, threshold_lower, threshold_upper, threshold_breakpoint):
+    def create_image(self, path_png, threshold_lower, threshold_upper, threshold_breakpoint, type):
 
         ultima_lectura = int(rrdtool.last(self.path_rrd + self.name_rrd))
         tiempo_final = ultima_lectura
@@ -47,7 +47,7 @@ class HandlerSNMP:
                             "--start", str(tiempo_inicial),
                             "--end", str(tiempo_final),
                             "--vertical-label=Carga CPU",
-                            "--title=Uso de CPU",
+                            "--title=Uso de " + type,
                             "--color", "ARROW#009900",
                             '--vertical-label', "Uso de CPU (%)",
                             '--lower-limit', threshold_lower,
