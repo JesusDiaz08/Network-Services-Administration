@@ -1,6 +1,6 @@
 import handlerSNMP as hs
 from six.moves import tkinter as tk
-
+from tkinter import ttk
 class GUI(tk.Frame):
     def __init__(self, parent = None):
         tk.Frame.__init__(self, parent)
@@ -27,9 +27,24 @@ class GUI(tk.Frame):
         self.ip_text.pack()
         self.ip_text.place(relx = .3, rely = .15, anchor = "c")
 
+        self.thresh_lbl = tk.Label(self.parent, text="Umbral: (bp,go,set)")
+        self.thresh_lbl.pack()
+        self.thresh_lbl.place(relx=.1, rely=0.2, anchor="c")
+
+        self.thresh_text = tk.Entry(self.parent)
+        self.thresh_text.insert(0, "25, 80, 20")
+        self.thresh_text.pack()
+        self.thresh_text.place(relx=.3, rely=.2, anchor="c")
+
+        self.options_oid = ttk.Combobox(self.parent)
+        self.options_oid.place(relx = 0.3, rely = 0.3, anchor="c")
+        self.options_oid["values"] = ["RAM", "CPU", "DISCO"]
+
         self.btn_start = tk.Button(self.parent, text = "Start", command = self.start)
         self.btn_start.pack()
-        self.btn_start.place(relx=0.1, rely=.25, anchor="c")
+        self.btn_start.place(relx=0.1, rely=.35, anchor="c")
+
+
 
         #self. = tk.
 
@@ -41,7 +56,7 @@ class GUI(tk.Frame):
 
         h1 = hs.HandlerSNMP(path_rrd, name_rrd)
 
-        h1.create()
+        h1.create(self.options_oid.get())
 
         commmnity = self.com_text.get()
         ip = self.ip_text.get()
