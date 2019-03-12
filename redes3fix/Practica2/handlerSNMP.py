@@ -19,14 +19,15 @@ class HandlerSNMP:
         if ret:
             print(rrdtool.error())
 
-    def update(self, community, ip, OID = '1.3.6.1.2.1.25.3.3.1.2.196608' ):
+    def update(self, community, ip, OID = '1.3.6.1.2.1.25.3.3.1.2.196608', total = 200 ):
         carga_CPU = 0
         i = 0
+        she_doesnt_love_you = 1
 
-        while i < 10:
+        while she_doesnt_love_you:
             carga_CPU = int(consultaSNMP(community, ip, OID))
             valor = "N:" + str(carga_CPU)
-            print(valor)
+            print(str(i) + "-> " + valor)
             ret = rrdtool.update(self.path_rrd + self.name_rrd, valor)
             rrdtool.dump(self.path_rrd + self.name_rrd, 'trend.xml')
             time.sleep(1)
@@ -36,7 +37,7 @@ class HandlerSNMP:
             print(rrdtool.error())
             time.sleep(300)
 
-    def create_image(self, path_png, threshold_lower, threshold_upper):
+    def create_image(self, path_png, threshold_lower, threshold_upper, threshold_breakpoint):
 
         ultima_lectura = int(rrdtool.last(self.path_rrd + self.name_rrd))
         tiempo_final = ultima_lectura
@@ -59,7 +60,9 @@ class HandlerSNMP:
                             "VDEF:CPUmin=carga,MINIMUM",
                             "VDEF:CPUavg=carga,AVERAGE",
                             "VDEF:CPUmax=carga,MAXIMUM",
-
+                            "LINE2:" + threshold_breakpoint + "#FF0000",
+                            "LINE2:" + threshold_upper      + "#0D76FF",
+                            "LINE2:" + threshold_lower      + "#00FF00",
                             "COMMENT:Now          Min             Avg             Max",
                             "GPRINT:CPUlast:%12.0lf%s",
                             "GPRINT:CPUmin:%10.0lf%s",
