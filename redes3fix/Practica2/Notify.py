@@ -14,7 +14,7 @@ mailserver = 'smtp.gmail.com: 587'
 #password = 'Secreto123'
 password = "contraredes3"
 
-def send_alert_attached(subject, pngpath):
+def send_alert_attached(subject, pngpath, pngname):
     """ Will send e-mail, attaching png
     files in the flist.
     """
@@ -22,7 +22,7 @@ def send_alert_attached(subject, pngpath):
     msg['Subject'] = subject
     msg['From'] = mailsender
     msg['To'] = mailreceip
-    fp = open(pngpath+'deteccion.png', 'rb')
+    fp = open(pngpath+pngname, 'rb')
     img = MIMEImage(fp.read())
     fp.close()
     msg.attach(img)
