@@ -41,7 +41,7 @@ class GUI(tk.Frame):
         self.options_oid = ttk.Combobox(self.parent)
         self.options_oid.place(relx = 0.3, rely = 0.3, anchor="c")
         self.options_oid["values"] = ["RAM", "CPUload", "DISCO"]
-        self.oids = {"CPUload":"iso.3.6.1.2.1.25.3.3.1.2.196608","RAM":"a","DISCO": "b"}
+        self.oids = {"CPUload":"iso.3.6.1.2.1.25.3.3.1.2.196608","RAM":"1.3.6.1.2.1.25.2.2.0","DISCO": "b"}
 
         self.btn_start = tk.Button(self.parent, text = "Start", command = self.start)
         self.btn_start.pack()
@@ -59,7 +59,7 @@ class GUI(tk.Frame):
 
         h1 = hs.HandlerSNMP(path_rrd, name_rrd)
 
-        #h1.create(self.options_oid.get())
+        h1.create(self.options_oid.get())
 
         commmnity = self.com_text.get()
         ip = self.ip_text.get()
@@ -69,12 +69,12 @@ class GUI(tk.Frame):
 
         print(thre)
         self.umbrales = {"breakpoint": thre[0], "set": thre[2], "go": thre[1]}
-        #h1.update(commmnity, ip, OID = self.oids[self.options_oid.get()], type = self.options_oid.get())
+        h1.update(commmnity, ip, OID = self.oids[self.options_oid.get()], type = self.options_oid.get())
         print(self.options_oid.get())
-        #h1.create_image(path_rrd,
-                       # self.umbrales["breakpoint"],
-                       # self.umbrales["set"],
-                        #self.umbrales["go"], self.options_oid.get())
+        h1.create_image(path_rrd,
+                        self.umbrales["breakpoint"],
+                        self.umbrales["set"],
+                        self.umbrales["go"], self.options_oid.get())
 
         h1.deteccion(self.umbrales, type = self.options_oid.get())
 
