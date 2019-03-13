@@ -20,6 +20,7 @@ from pysnmp.hlapi import *
 puerto = 161
 
 def consultaSNMP(comunidad,host,oid):
+    resultado = "0"
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
                CommunityData(comunidad),

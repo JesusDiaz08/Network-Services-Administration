@@ -112,7 +112,14 @@ class HandlerSNMP:
         # print(ret.keys())
         # print(ret.items())
 
-        ultimo_valor = float(ret['print[0]'])
+        value = ret['print[0]']
+        res = 0
+        j = 0
+        for i in range(0, len(value)):
+            if value[i].isdigit() == True:
+                res = res + (int(value[i]) * (10**(j)))
+                j = j + 1
+        ultimo_valor = float(res)
         print(ret['print[1]'])
         if ultimo_valor > float(umbrales['breakpoint']):
             nombre_asunto = "Equipo Champions - "
