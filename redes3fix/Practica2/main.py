@@ -1,3 +1,5 @@
+from numpy.f2py.auxfuncs import throw_error
+
 import handlerSNMP as hs
 from six.moves import tkinter as tk
 from tkinter import ttk
@@ -38,7 +40,8 @@ class GUI(tk.Frame):
 
         self.options_oid = ttk.Combobox(self.parent)
         self.options_oid.place(relx = 0.3, rely = 0.3, anchor="c")
-        self.options_oid["values"] = ["RAM", "CPU", "DISCO"]
+        self.options_oid["values"] = ["RAM", "CPUload", "DISCO"]
+        self.oids = {"CPUload":"iso.3.6.1.2.1.25.3.3.1.2.196608","RAM":"a","DISCO": "b"}
 
         self.btn_start = tk.Button(self.parent, text = "Start", command = self.start)
         self.btn_start.pack()
@@ -60,14 +63,20 @@ class GUI(tk.Frame):
 
         commmnity = self.com_text.get()
         ip = self.ip_text.get()
-        self.umbrales = {"breakpoint": "70", "set": "20", "go": "10"}
-        h1.update(commmnity, ip, OID = 'iso.3.6.1.2.1.25.3.3.1.2.196608')
-        h1.create_image(path_rrd,
-                        self.umbrales["breakpoint"],
-                        self.umbrales["set"],
-                        self.umbrales["go"])
+        thresholds = self.thresh_text.get()
+        thresholds.replace(" ", "")
+        thre = thresholds.split(", ")
 
-        h1.deteccion(self.umbrales)
+        print(thre)
+        self.umbrales = {"breakpoint": thre[0], "set": thre[2], "go": thre[1]}
+        h1.update(commmnity, ip, OID = self.oids[self.options_oid.get()], type = self.options_oid.get())
+        print(self.options_oid.get())
+        #h1.create_image(path_rrd,
+                       # self.umbrales["breakpoint"],
+                       # self.umbrales["set"],
+                        #self.umbrales["go"], self.options_oid.get())
+
+        h1.deteccion(self.umbrales, type = self.options_oid.get())
 
 if __name__ == '__main__':
     root = tk.Tk()
