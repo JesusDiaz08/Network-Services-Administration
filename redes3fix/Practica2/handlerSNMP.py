@@ -76,7 +76,7 @@ class HandlerSNMP:
 
     def deteccion(self, umbrales, type = "CPUload"):
 
-        ultima_lectura = int(rrdtool.last(self.path_rrd + self.name_rrd))
+        ultima_lectura = int(rrdtool.last(self.path_rrd +type+ self.name_rrd))
         tiempo_final = ultima_lectura
         tiempo_inicial = tiempo_final - 3600
 
