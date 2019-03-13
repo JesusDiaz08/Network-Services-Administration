@@ -60,9 +60,14 @@ class GUI(tk.Frame):
 
         commmnity = self.com_text.get()
         ip = self.ip_text.get()
-
+        self.umbrales = {"breakpoint": "70", "set": "20", "go": "10"}
         h1.update(commmnity, ip, OID = 'iso.3.6.1.2.1.25.3.3.1.2.196608')
-        h1.create_image(path_rrd)
+        h1.create_image(path_rrd,
+                        self.umbrales["breakpoint"],
+                        self.umbrales["set"],
+                        self.umbrales["go"])
+
+        h1.deteccion(self.umbrales)
 
 if __name__ == '__main__':
     root = tk.Tk()
