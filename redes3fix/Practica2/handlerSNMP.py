@@ -2,14 +2,13 @@ import time
 import rrdtool
 from Notify import *
 from getSNMP import consultaSNMP
-
+import threading
 
 class HandlerSNMP:
 
     def __init__(self, path_rrd, name_rrd):
         self.path_rrd = path_rrd
         self.name_rrd = name_rrd
-
 
     def create(self, type):
         ret = rrdtool.create(self.path_rrd + type+self.name_rrd,
@@ -80,51 +79,105 @@ class HandlerSNMP:
         tiempo_final = ultima_lectura
         tiempo_inicial = tiempo_final - 3600
 
-        ret = rrdtool.graphv(self.path_rrd + type + "deteccion.png",
-                             "--start", str(tiempo_inicial),
-                             "--end", str(tiempo_final),
-                             "--title", type,
-                             "--vertical-label=Uso de "+ type+"(%)",
-                             '--lower-limit', '0',
-                             '--upper-limit', '100',
-                             "DEF:carga=" + self.path_rrd +type+ self.name_rrd + ":"+type+":AVERAGE",
-                             "CDEF:umbral25=carga,25,LT,0,carga,IF",
-                             "VDEF:cargaMAX=carga,MAXIMUM",
-                             "VDEF:cargaMIN=carga,MINIMUM",
-                             "VDEF:cargaSTDEV=carga,STDEV",
-                             "VDEF:cargaLAST=carga,LAST",
-                             "AREA:carga#00FF00:"+type,
-                             "AREA:umbral25#FF9F00:Tráfico de carga mayor que 25",
-                             "HRULE:25#FF0000:Umbral 1 - 25%",
-                             "LINE2:" + umbrales['breakpoint'] + "#FF0000",
-                             "LINE2:" + umbrales['set'] + "#0D76FF",
-                             "LINE2:" + umbrales['go'] + "#00FF00",
-                             "PRINT:cargaMAX:%6.2lf %S",
-                             "GPRINT:cargaMIN:%6.2lf %SMIN",
-                             "GPRINT:cargaSTDEV:%6.2lf %SSTDEV",
-                             "GPRINT:cargaLAST:%6.2lf %SLAST",
-                             "VDEF:m=carga,LSLSLOPE",
-                             "VDEF:b=carga,LSLINT",
-                             'CDEF:tendencia=carga,POP,m,COUNT,*,b,+',
-                             "LINE2:tendencia#FFBB00",
-                             "PRINT:m:%6.2lf %S")
+        if type == "CPUload":
+
+            ret = rrdtool.graphv(self.path_rrd + type + "deteccion.png",
+                                 "--start", str(tiempo_inicial),
+                                 "--end", str(tiempo_final),
+                                 "--title", type,
+                                 "--vertical-label=Uso de "+ type+"(%)",
+                                 '--lower-limit', '0',
+                                 '--upper-limit', '100',
+                                 "DEF:carga=" + self.path_rrd +type+ self.name_rrd + ":"+type+":AVERAGE",
+                                 "CDEF:umbral25=carga,25,LT,0,carga,IF",
+                                 "VDEF:cargaMAX=carga,MAXIMUM",
+                                 "VDEF:cargaMIN=carga,MINIMUM",
+                                 "VDEF:cargaSTDEV=carga,STDEV",
+                                 "VDEF:cargaLAST=carga,LAST",
+                                 "AREA:carga#00FF00:"+type,
+                                 "AREA:umbral25#FF9F00:Tráfico de carga mayor que 25",
+                                 "HRULE:25#FF0000:Umbral 1 - 25%",
+                                 "LINE2:" + umbrales['breakpoint'] + "#FF0000",
+                                 "LINE2:" + umbrales['set'] + "#0D76FF",
+                                 "LINE2:" + umbrales['go'] + "#00FF00",
+                                 "PRINT:cargaMAX:%6.2lf %S",
+                                 "GPRINT:cargaMIN:%6.2lf %SMIN",
+                                 "GPRINT:cargaSTDEV:%6.2lf %SSTDEV",
+                                 "GPRINT:cargaLAST:%6.2lf %SLAST",
+                                 "VDEF:m=carga,LSLSLOPE",
+                                 "VDEF:b=carga,LSLINT",
+                                 'CDEF:tendencia=carga,POP,m,COUNT,*,b,+',
+                                 "LINE2:tendencia#FFBB00",
+                                 "PRINT:m:%6.2lf %S",
+                                 "PRINT:b:%6.2lf %S")
+        elif type == "RAM":
+
+            ret = rrdtool.graphv(self.path_rrd + type + "deteccion.png",
+                                 "--start", str(tiempo_inicial),
+                                 "--end", str(tiempo_final),
+                                 "--title", type,
+                                 "--vertical-label=Uso de "+ type+"(%)",
+                                 '--lower-limit', '0',
+                                 '--upper-limit', '100',
+                                 "DEF:carga=" + self.path_rrd +type+ self.name_rrd + ":"+type+":AVERAGE",
+                                 "CDEF:umbral25=carga,25,LT,0,carga,IF",
+                                 "VDEF:cargaMAX=carga,MAXIMUM",
+                                 "VDEF:cargaMIN=carga,MINIMUM",
+                                 "VDEF:cargaSTDEV=carga,STDEV",
+                                 "VDEF:cargaLAST=carga,LAST",
+                                 "AREA:carga#00FF00:"+type,
+                                 "AREA:umbral25#FF9F00:Tráfico de carga mayor que 25",
+                                 "HRULE:25#FF0000:Umbral 1 - 25%",
+                                 "LINE2:" + umbrales['breakpoint'] + "#FF0000",
+                                 "LINE2:" + umbrales['set'] + "#0D76FF",
+                                 "LINE2:" + umbrales['go'] + "#00FF00",
+                                 "PRINT:cargaMAX:%6.2lf %S",
+                                 "GPRINT:cargaMIN:%6.2lf %SMIN",
+                                 "GPRINT:cargaSTDEV:%6.2lf %SSTDEV",
+                                 "GPRINT:cargaLAST:%6.2lf %SLAST",
+                                 "VDEF:m=carga,LSLSLOPE",
+                                 "VDEF:b=carga,LSLINT",
+                                 'CDEF:tendencia=carga,POP,m,COUNT,*,b,+',
+                                 "LINE2:tendencia#FFBB00",
+                                 "PRINT:m:%6.2lf %S",
+                                 "PRINT:b:%6.2lf %S")
         print (ret)
         # print(ret.keys())
         # print(ret.items())
 
         value = ret['print[0]']
-        res = 0
-        j = 0
-        for i in range(0, len(value)):
-            if value[i].isdigit() == True:
-                res = res + (int(value[i]) * (10**(j)))
-                j = j + 1
+        res = formatNumber(value)
         ultimo_valor = float(res)
-        print(ret['print[1]'])
+
+        slope = float(formatNumber(ret['print[1]'].replace(" ","").replace("k", "")))
+        B = float(formatNumber(ret['print[2]']))
+        print(slope)
+        print(B)
+        pre = Prediction(slope, B)
+        print(pre.predict(80))
         if ultimo_valor > float(umbrales['breakpoint']):
             nombre_asunto = "Equipo Champions - "
             send_alert_attached(nombre_asunto + "Sobrepasa Umbral línea base", self.path_rrd, type+"deteccion.png", type+self.name_rrd)
 
 
-
-
+def formatNumber(value):
+    print("val: " + value)
+    res = 0
+    j = 0
+    neg = False
+    for i in range(0, len(value)):
+        if value[i].isdigit() == True:
+            res = res + (int(value[i]) * (10 ** (j)))
+            j = j + 1
+        elif value[i] == '-':
+            neg = True
+    res = int(str(res)[::-1])
+    if neg:
+        res = res * -1
+    return res / 100
+class Prediction:
+    def __init__(self, m, b):
+        self.m = m
+        self.b = b
+    def predict(self, val):
+        return (val - self.b) / self.m

@@ -3,6 +3,7 @@ from numpy.f2py.auxfuncs import throw_error
 import handlerSNMP as hs
 from six.moves import tkinter as tk
 from tkinter import ttk
+from threading import *
 class GUI(tk.Frame):
     def __init__(self, parent = None):
         tk.Frame.__init__(self, parent)
@@ -43,14 +44,16 @@ class GUI(tk.Frame):
         self.options_oid["values"] = ["RAM", "CPUload", "DISCO"]
         self.oids = {"CPUload":"iso.3.6.1.2.1.25.3.3.1.2.196608","RAM":"1.3.6.1.4.1.2021.4.6.0","DISCO": "1.3.6.1.2.1.1.3.0"}
 
-        self.btn_start = tk.Button(self.parent, text = "Start", command = self.start)
+        self.btn_start = tk.Button(self.parent, text = "Start", command = self.run)
         self.btn_start.pack()
         self.btn_start.place(relx=0.1, rely=.35, anchor="c")
 
 
 
         #self. = tk.
-
+    def run(self):
+        thread = Thread(target = self.start)
+        thread.start()
     def init_ui(self):
         self.parent.title("Monitoreo")
     def start(self):
