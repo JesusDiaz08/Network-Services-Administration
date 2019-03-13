@@ -74,7 +74,7 @@ class HandlerSNMP:
                             "LINE2:tendencia#FFBB00")
 
     def deteccion(self, umbrales, type = "CPUload"):
-
+        print(type)
         ultima_lectura = int(rrdtool.last(self.path_rrd +type+ self.name_rrd))
         tiempo_final = ultima_lectura
         tiempo_inicial = tiempo_final - 3600
@@ -154,7 +154,7 @@ class HandlerSNMP:
         print(slope)
         print(B)
         pre = Prediction(slope, B)
-        print(pre.predict(80))
+       # print(pre.predict(80))
         if ultimo_valor > float(umbrales['breakpoint']):
             nombre_asunto = "Equipo Champions - "
             send_alert_attached(nombre_asunto + "Sobrepasa Umbral línea base", self.path_rrd, type+"deteccion.png", type+self.name_rrd)

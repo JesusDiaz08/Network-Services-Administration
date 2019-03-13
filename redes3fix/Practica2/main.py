@@ -52,17 +52,17 @@ class GUI(tk.Frame):
 
         #self. = tk.
     def run(self):
-        thread = Thread(target = self.start)
+        thread = Thread(target = self.start, args=(self.oids[self.options_oid.get()], self.options_oid.get()))
         thread.start()
     def init_ui(self):
         self.parent.title("Monitoreo")
-    def start(self):
+    def start(self, oid, type):
         path_rrd = "/home/linuxsnmp/Escritorio/"
         name_rrd = "trend.rrd"
 
         h1 = hs.HandlerSNMP(path_rrd, name_rrd)
 
-        h1.create(self.options_oid.get())
+        h1.create(type)
 
         commmnity = self.com_text.get()
         ip = self.ip_text.get()
@@ -72,14 +72,14 @@ class GUI(tk.Frame):
 
         print(thre)
         self.umbrales = {"breakpoint": thre[0], "set": thre[2], "go": thre[1]}
-        h1.update(commmnity, ip, OID = self.oids[self.options_oid.get()], type = self.options_oid.get())
+        h1.update(commmnity, ip, OID = oid, type = type)
         print(self.options_oid.get())
         #h1.create_image(path_rrd,
          #               self.umbrales["breakpoint"],
           #              self.umbrales["set"],
            #             self.umbrales["go"], self.options_oid.get())
 
-        h1.deteccion(self.umbrales, type = self.options_oid.get())
+        h1.deteccion(self.umbrales, type = type)
 
 if __name__ == '__main__':
     root = tk.Tk()
