@@ -116,7 +116,7 @@ class HandlerSNMP:
         print(ret['print[1]'])
         if ultimo_valor > float(umbrales['breakpoint']):
             nombre_asunto = "Equipo Champions - "
-            send_alert_attached(nombre_asunto + "Sobrepasa Umbral línea base", self.path_rrd, type+"deteccion.png")
+            send_alert_attached(nombre_asunto + "Sobrepasa Umbral línea base", self.path_rrd, type+"deteccion.png", type+self.name_rrd)
 
 
 
