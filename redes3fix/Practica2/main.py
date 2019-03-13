@@ -41,7 +41,7 @@ class GUI(tk.Frame):
         self.options_oid = ttk.Combobox(self.parent)
         self.options_oid.place(relx = 0.3, rely = 0.3, anchor="c")
         self.options_oid["values"] = ["RAM", "CPUload", "DISCO"]
-        self.oids = {"CPUload":"iso.3.6.1.2.1.25.3.3.1.2.196608","RAM":"1.3.6.1.4.1.2021.4.6.0","DISCO": "b"}
+        self.oids = {"CPUload":"iso.3.6.1.2.1.25.3.3.1.2.196608","RAM":"1.3.6.1.4.1.2021.4.6.0","DISCO": "1.3.6.1.2.1.1.3.0"}
 
         self.btn_start = tk.Button(self.parent, text = "Start", command = self.start)
         self.btn_start.pack()
