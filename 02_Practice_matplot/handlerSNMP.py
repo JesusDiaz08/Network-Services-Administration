@@ -21,11 +21,11 @@ class MonitorTool:
         file = open(self.path_file + name_elem, "a+")
         self.starttime = time.time()
         for i in range(0, iterations):
-            print("iteration: " + str(i))
             val = int(consultaSNMP(community, ip, OID))
             ts = time.time()
             file.write(str(ts) + " " + str(val) + " " + str(i)+"\n")
             time.sleep(interval)
+            print("iteration: " + str(i) + " val: " +str(val))
         file.close()
 
     def timestampToTime(self, timestamp):
@@ -90,10 +90,9 @@ class MonitorTool:
         return self.timestampToTime(self.starttime + (value - self.b) * 3600/ self.slope)
 
 
-
 if __name__== "__main__":
     test = MonitorTool("/home/linuxsnmp/Escritorio/", "test.txt")
-    #test.createReg(test.name_file)
+    #test.createReg()
     #test.update("gr_4cm1", "localhost", "1.3.6.1.2.1.25.3.3.1.2.196608", test.name_file, 100)
     list1 = test.getPoints(test.name_file)
     print(list1)
