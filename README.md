@@ -1,7 +1,4 @@
-# Network-Services-Administration
-Example of detection:
-
-# Administración de Servicios en Red - ASR
+# Network-Services-Administration (Administración de Servicios en Red) - ASR
 Este repositorio contiene prácticas, ejercicios y proyecto final de la materia de ***Administración de Servicios en Red*** dada en la ***Escuela Superior de Cómputo*** del ***Instituto Politécnico Nacional.***
 
 Hasta el momento, este repositorio contiene 1 práctica.
